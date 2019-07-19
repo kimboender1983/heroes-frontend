@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import SearchResults from './components/SearchResults';
+import HeroFilter from './components/HeroFilter';
+import HeroDetails from './components/HeroDetails';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import {
+	HeroFilterValueContextProvider,
+	Ivalue
+} from './contexts/HeroFilterValueContext';
+
+class App extends Component {
+	updateSearchValue = (value: string) => {
+		this.setState({ value });
+	};
+
+	state: Ivalue = {
+		value: 'Test',
+		updateValue: this.updateSearchValue
+	};
+
+	render() {
+		return (
+			<div className="App">
+				<Router>
+					<HeroFilterValueContextProvider value={this.state}>
+						<Route path="/" exact component={HeroFilter} />
+						<Route path="/" exact component={SearchResults} />
+						<Route path="/hero/:slug" component={HeroDetails} />
+					</HeroFilterValueContextProvider>
+				</Router>
+			</div>
+		);
+	}
 }
 
 export default App;

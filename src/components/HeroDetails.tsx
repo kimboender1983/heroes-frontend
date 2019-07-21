@@ -3,6 +3,8 @@ import HeroFilter from '../components/HeroFilter';
 import { Container, Row, Col } from 'react-grid-system';
 import { getSingleSuperHero } from '../api/apiClient';
 import styled from 'styled-components';
+import Img from 'react-image';
+import Loader from 'react-loader-spinner';
 
 const HeroContainer = styled.div`
 	background-color: white;
@@ -11,6 +13,19 @@ const HeroContainer = styled.div`
 	box-shadow: 0px 0px 5px 1px rgba(255, 255, 255, 0.35);
 	padding: 0.4rem 1.6rem 1.6rem;
 	margin-bottom: 2rem;
+
+	h1,
+	h2 {
+		text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
+	}
+
+	transform: rotate(-30deg) scale(0);
+	overflow: hidden;
+	transition: all 0.4s ease-in-out;
+
+	&.active {
+		transform: rotate(0deg) scale(1);
+	}
 
 	table {
 		width: 100%;
@@ -57,6 +72,19 @@ const ImageHolder = styled.div`
 		transform: rotate(1deg);
 		margin-top: 1rem;
 		box-shadow: 4px 4px 8px -3px rgba(0, 0, 0, 0.5);
+		max-width: 450px;
+	}
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	svg {
+		max-width: 50%;
+		position: absolute;
+		display: inline-block;
+		top: 30%;
+		right: 40%;
+		vertical-align: center;
+		transform: rotate(1deg);
 	}
 `;
 
@@ -64,11 +92,15 @@ const HeroDetails = (props: { location: { state: { id: number } } }) => {
 	const { id } = props.location.state;
 	const [hero, setHero] = useState();
 	const [show, setShow] = useState(false);
+	const [active, setActive] = useState(false);
 
 	useEffect(() => {
 		getSingleSuperHero(id).then(res => {
 			setHero(res.data);
 			setShow(true);
+			setTimeout(() => {
+				setActive(true);
+			}, 1);
 		});
 	}, []);
 
@@ -79,7 +111,7 @@ const HeroDetails = (props: { location: { state: { id: number } } }) => {
 				<Row>
 					<Col>
 						{show && Object.keys(hero).length > 0 && (
-							<HeroContainer>
+							<HeroContainer className={active ? 'active' : ''}>
 								<h1>{hero.name}</h1>
 								<hr />
 								<Row>
@@ -173,7 +205,17 @@ const HeroDetails = (props: { location: { state: { id: number } } }) => {
 									</Col>
 									<Col sm={6}>
 										<ImageHolder>
-											<img src={hero.images.lg} alt={hero.name} />
+											<Img
+												src={hero.images.lg}
+												loader={
+													<Loader
+														type="Triangle"
+														color="#393A3C"
+														height="100"
+														width="100"
+													/>
+												}
+											/>
 										</ImageHolder>
 									</Col>
 								</Row>

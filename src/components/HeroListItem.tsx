@@ -2,6 +2,8 @@ import React from 'react';
 import { ResultsItem } from '../types/Result';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import Img from 'react-image';
+import Loader from 'react-loader-spinner';
 
 const HeroListItemStyled = styled.div`
 	background-color: white;
@@ -29,25 +31,48 @@ const HeroListItemStyled = styled.div`
 		letter-spacing: 1px;
 		text-decoration: none;
 		all: revert;
+		text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.3);
 	}
 `;
 
 const ImageHolder = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: white;
+	min-height: 150px;
 	img {
 		width: 100%;
 		display: block;
 		object-fit: cover;
+	}
+	svg {
+		max-width: 50%;
+		position: absolute;
+		display: inline-block;
+		top: 40%;
+		right: 37%;
+		vertical-align: center;
+		transform: rotate(1deg);
 	}
 `;
 
 const HeroListItem = (props: { key: string; hero: ResultsItem }) => {
 	const { hero } = props;
 	return (
-		<Link to={{ pathname: `/hero/${hero.slug}`, state: { id: hero.id } }}>
+		<Link
+			to={{ pathname: `/hero/${hero.slug}`, state: { id: hero.id } }}
+			style={{ textDecoration: 'none' }}
+		>
 			<HeroListItemStyled>
 				<h3>{hero.name}</h3>
 				<ImageHolder>
-					<img src={hero.images.sm} alt={hero.name} />
+					<Img
+						src={hero.images.sm}
+						loader={
+							<Loader type="Triangle" color="#393A3C" height="50" width="50" />
+						}
+					/>
 				</ImageHolder>
 			</HeroListItemStyled>
 		</Link>

@@ -24,7 +24,14 @@ class App extends Component {
 			<div className="App">
 				<Router>
 					<HeroFilterValueContextProvider value={this.state}>
-						<Route path="/" exact component={HeroFilter} />
+						<Route
+							path="/"
+							exact
+							component={HeroFilter}
+							onUpdate={() =>
+								localStorage.setItem('pos', String(window.pageXOffset))
+							}
+						/>
 						<Route path="/" exact component={SearchResults} />
 						<Route path="/hero/:slug" component={HeroDetails} />
 					</HeroFilterValueContextProvider>
